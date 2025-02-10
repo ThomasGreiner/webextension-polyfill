@@ -96,9 +96,11 @@ if (!(globalThis.browser && globalThis.browser.runtime && globalThis.browser.run
      *        The generated callback function.
      */
     const makeCallback = (promise, metadata) => {
+      let error = new Error("Error reported from an asynchronous browser API");
       return (...callbackArgs) => {
         if (extensionAPIs.runtime.lastError) {
-          promise.reject(new Error(extensionAPIs.runtime.lastError.message));
+          error.cause = new Error(extensionAPIs.runtime.lastError.message);
+          promise.reject(error);
         } else if (metadata.singleCallbackArg ||
                    (callbackArgs.length <= 1 && metadata.singleCallbackArg !== false)) {
           promise.resolve(callbackArgs[0]);

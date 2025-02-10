@@ -72,7 +72,9 @@ describe("browser-polyfill", () => {
           () => fail("Expected a rejected promise"),
           (err) => {
             instanceOf(err, window.Error, "Expected the error to be an instance of Error");
-            equal(err.message, fakeChrome.runtime.lastError.message,
+            equal(err.message, "Error reported from an asynchronous browser API",
+                  "Got the expected error wrapper");
+            equal(err.cause.message, fakeChrome.runtime.lastError.message,
                   "Got the expected error in the rejected promise");
           }
         );
